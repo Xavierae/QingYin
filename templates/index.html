@@ -1,0 +1,118 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录界面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url({{ url_for('static', filename='images/background.jpg') }});
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.8); /* 添加透明度，使文本更清晰 */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333; /* 修改标题颜色 */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="password"] {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            width: 100%; /* 让输入框填满整个容器 */
+            box-sizing: border-box; /* 防止 padding 影响宽度 */
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%; /* 让按钮填满整个容器 */
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .forgot-password-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>倾音</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('login') }}" method="post">
+            <div>
+                <label for="uid">用户ID</label>
+                <input type="text" id="uid" name="uid" required>
+            </div>
+            <div>
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">登录</button>
+            <div class="error-message">
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% if category == 'error' %}
+                            {{ message }}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </form>
+        <div class="forgot-password-link">
+            <a href="{{ url_for('forget_password') }}">忘记密码</a>
+        </div>
+        <div class="register-link">
+            <a href="{{ url_for('register') }}">注册</a>
+        </div>
+    </div>
+</body>
+</html>

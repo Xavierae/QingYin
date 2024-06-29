@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .sidebar {
+            width: 200px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        .sidebar h2 {
+            margin: 0 0 20px 0;
+        }
+        .sidebar button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 10px 0;
+            width: 80%;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .sidebar button:hover {
+            background-color: #2980b9;
+        }
+        .main-content {
+            flex: 1;
+            background-image: url("/static/images/background3.jpg");
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .table-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 id="username">用户名</h2>
+        <button onclick="fetchHistoryRecords()">历史识别记录</button>
+        <button onclick="fetchLikedRecords()">我的收藏</button>
+    </div>
+    <div class="main-content">
+        <div id="history-section" class="table-container" style="display:none;">
+            <h3>历史识别记录</h3>
+            <table id="history-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>歌曲名称</th>
+                        <th>时间戳</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+            </table>
+        </div>
+        <div id="likes-section" class="table-container" style="display:none;">
+            <h3>我的收藏</h3>
+            <table id="likes-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>歌曲名称</th>
+                        <th>时间戳</th>
+                    </tr>
+                </thead>
+                <tbody id="likes-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/get_username')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('username').textContent = data.username;
+                });
+        });
+
+        function fetchHistoryRecords() {
+            $.get('/fetch_history_records', function(data) {
+                if ('records' in data) {
+                    displayRecords(data.records, 'history-table-body');
+                    document.getElementById('history-section').style.display = 'block';
+                    document.getElementById('likes-section').style.display = 'none';
+                } else {
+                    console.error('Error fetching history records:', data.error);
+                    alert('Error fetching history records. Please try again later.');
+                }
+            });
+        }
+
+        function fetchLikedRecords() {
+            $.get('/fetch_liked_records', function(data) {
+                if ('likes' in data) {
+                    displayRecords(data.likes, 'likes-table-body');
+                    document.getElementById('likes-section').style.display = 'block';
+                    document.getElementById('history-section').style.display = 'none';
+                } else {
+                    console.error('Error fetching liked records:', data.error);
+                    alert('Error fetching liked records. Please try again later.');
+                }
+            });
+        }
+
+        function displayRecords(records, targetElementId) {
+            var displayTableBody = document.getElementById(targetElementId);
+            displayTableBody.innerHTML = ''; // Clear previous content
+            records.forEach(function(record) {
+                var row = document.createElement('tr');
+
+                var idCell = document.createElement('td');
+                idCell.textContent = record.record_id;
+                row.appendChild(idCell);
+
+                var songCell = document.createElement('td');
+                songCell.textContent = record.song_name;
+                row.appendChild(songCell);
+
+                var timeCell = document.createElement('td');
+                timeCell.textContent = record.time;
+                row.appendChild(timeCell);
+
+                displayTableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

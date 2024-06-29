@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>操作界面</title>
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/background4.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            text-align: center;
+            color: #000; /* 文字颜色设置为黑色，与背景形成对比 */
+        }
+        .btn-group {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>欢迎！{{ uname }}，祝您度过美好的一天</h2>
+
+        <div class="btn-group">
+            <!-- 将听歌识曲按钮链接到recognize.html -->
+            <a href="/recognize" class="btn btn-primary btn-lg">识曲推荐</a>
+            <!-- 修改我的按钮链接 -->
+            <a href="/Mine.html" class="btn btn-info btn-lg">我的</a>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
